@@ -14,8 +14,7 @@ async function clawFetch(){
         claw.close();
         await(wait());
         await(claw.moveY(-2));
-        //moveX
-        await(wait());
+        await(claw.reset());
         claw.open();
         await(wait());
         claw.close();

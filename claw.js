@@ -63,7 +63,7 @@ class Claw{
                     requestAnimationFrame(step);
                 }
                 else{
-                    this.gap.length = thisclawGap/2;
+                    this.gap.length = this.clawGap/2;
                     resolve();//end of animation
                 }
             };
@@ -101,7 +101,7 @@ class Claw{
         Body.translate(this.joint, {x: speed * direction, y: 0});
     }
     
-    moveY(speed){
+    moveY(speed=1){
         return new Promise((resolve) => {
             const step = () => {
                 if ((this.rightClaw.position.y < h-this.botLimit && speed > 0) ||
@@ -115,6 +115,24 @@ class Claw{
                     resolve();//end of animation
                 }
             };
+            step();
+        });
+    }
+    
+    reset(speed=1){
+        speed *= -1;
+        return new Promise((resolve) => {
+            let i = this.rightClaw.position.x;
+           const step = () => {
+               if (i > this.mapLimit){
+                   i += speed;
+                    Body.translate(this.joint, {x: speed, y: 0});
+                    requestAnimationFrame(step);
+               }
+               else{
+                   resolve();
+               }
+           };
             step();
         });
     }
