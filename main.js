@@ -1,4 +1,4 @@
-let claw = new Claw(50, 40);
+let claw = new Claw(70, 40);
 let clawIsBusy = false;
 
 async function wait(){
@@ -14,22 +14,18 @@ async function clawFetch(){
 }
 
 document.onkeydown = function(e){
-    if(!clawIsBusy){ //claw's unavailable
-        clawIsBusy = true;
-        switch(e.keyCode){
-            case 37:
-                claw.moveX(-1);
-                break;
-            case 39:
-                claw.moveX(1);
-                break;
-            case 40:
-                clawFetch();
-                break;
-        }
-        clawIsBusy = false;
-    }
-    else{
-        console.log("Claw unavailable");
+    switch(e.keyCode){
+        case 37:
+            claw.moveX(-1);
+            clawIsBusy = false;
+            break;
+        case 39:
+            claw.moveX(1);
+            clawIsBusy = false;
+            break;
+        case 40:
+            clawFetch();
+            clawIsBusy = false;
+            break;
     }
 };

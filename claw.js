@@ -1,26 +1,33 @@
-class Claw {
-    constructor(clawGap, mapLimit){
+class Claw{
+    constructor(clawGap, mapLimit, topLimit = 80, prizeRadius = 2.3){
         this.mapLimit = mapLimit;
         this.clawGap = clawGap;
+        this.topLimit = topLimit;
+        this.prizeRadius = prizeRadius;
 
-        this.rightClaw = Bodies.rectangle(mapLimit, 80, 10, 50, {isStatic: true});
-        this.leftClaw = Bodies.rectangle(mapLimit+clawGap, 80, 10, 50, {isStatic: true});
-        Body.setAngle(this.rightClaw, 2.3); //in radians
-        Body.setAngle(this.leftClaw, -2.3);
+        this.rightClaw = Bodies.rectangle(mapLimit, topLimit, 10, 50, {isStatic: true});
+        this.leftClaw = Bodies.rectangle(mapLimit+clawGap, topLimit, 10, 50, {isStatic: true});
+        
+        Body.setAngle(this.rightClaw, prizeRadius); //in radians
+        Body.setAngle(this.leftClaw, -prizeRadius);
+        
         Composite.add(engine.world, [this.rightClaw, this.leftClaw]); //add to the world
+        
+        this.rightClawPositionXInit = this.rightClaw.position.x;
+        this.leftClawPositionXInit = this.leftClaw.position.x;
     }
     
     close(){
-        Body.setPosition(this.rightClaw, {x: this.mapLimit, y: this.rightClaw.position.y});
-        Body.setPosition(this.leftClaw, {x: this.mapLimit+this.clawGap, y: this.leftClaw.position.y});
+        Body.setPosition(this.rightClaw, {x: (this.rightClaw.position.x + 10), y: this.rightClaw.position.y});
+        Body.setPosition(this.leftClaw, {x: (this.leftClaw.position.x - 10), y: this.leftClaw.position.y});
         
         Body.setAngle(this.rightClaw, 2.3); //in radians
         Body.setAngle(this.leftClaw, -2.3);
     }
     
     open(){
-        Body.setPosition(this.rightClaw, {x: this.mapLimit-20, y: this.rightClaw.position.y});
-        Body.setPosition(this.leftClaw, {x: (this.mapLimit+20)+this.clawGap, y: this.leftClaw.position.y});
+        Body.setPosition(this.rightClaw, {x: (this.rightClaw.position.x - 10), y: this.rightClaw.position.y});
+        Body.setPosition(this.leftClaw, {x: (this.leftClaw.position.x + 10), y: this.leftClaw.position.y});
 
         Body.setAngle(this.rightClaw, 2.6); //in radians
         Body.setAngle(this.leftClaw, -2.6);
@@ -38,6 +45,7 @@ class Claw {
             Body.translate(this.rightClaw, {x: speed * direction, y: 0});
             Body.translate(this.leftClaw, {x: speed * direction, y: 0});
         }
+        console.log(this.rightClaw.position.x);
     }
     
     moveY(speed){
@@ -51,7 +59,7 @@ class Claw {
                     requestAnimationFrame(step);
                 }
                 else{            
-                    resolve(); //end of animation
+                    resolve();//end of animation
                 }
             };
             step();
