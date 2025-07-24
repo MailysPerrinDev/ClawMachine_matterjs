@@ -9,4 +9,8 @@ class Prize{
     get height(){
         return this.rad*2;
     }
+    
+    get width(){
+        return this.rad*2;
+    }
 }

@@ -1,4 +1,4 @@
-let prize = new Prize(72, 450, 30);
+let prize = new Prize(300, 450, 30);
 let claw = new Claw(80, prize.height);
 
 async function wait(){
@@ -12,6 +12,16 @@ async function clawFetch(){
     await(wait());
     await(claw.moveY(-2));
 }
+
+function generatePrizes(mapWidth){
+    let n = mapWidth/prize.width;
+    
+    for (let i=0; i<n; i++){
+        new Prize(w/2, 450, 30);
+    }
+}
+
+generatePrizes(w);
 
 document.onkeydown = function(e){
     switch(e.keyCode){
