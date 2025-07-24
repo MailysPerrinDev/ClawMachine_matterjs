@@ -53,7 +53,7 @@ class Claw{
         Composite.add(engine.world, [this.rightClaw, this.leftClaw, this.constraintRight, this.constraintLeft, this.gap]); //add to the world
     }
     
-    close(speed = 1){
+    async close(speed = 1){
         return new Promise((resolve) => {
             let i = this.clawGap;
             const step = () => {
@@ -71,7 +71,7 @@ class Claw{
         });   
     }
     
-    open(speed = 1){
+    async open(speed = 1){
         return new Promise((resolve) => {
             let i = this.clawGap/2;
             const step = () => {
@@ -88,7 +88,7 @@ class Claw{
         });
     }
     
-    moveX(direction, speed = 6, limitLeft = null, limitRight = null){
+    async moveX(direction, speed = 6, limitLeft = null, limitRight = null){
         if (limitLeft === null) limitLeft = this.mapLimit;
         if (limitRight === null)  limitRight = w - limitLeft;
 
@@ -101,7 +101,7 @@ class Claw{
         Body.translate(this.joint, {x: speed * direction, y: 0});
     }
     
-    moveY(speed=1){
+    async moveY(speed=1){
         return new Promise((resolve) => {
             const step = () => {
                 if ((this.rightClaw.position.y < h-this.botLimit && speed > 0) ||
@@ -119,7 +119,7 @@ class Claw{
         });
     }
     
-    reset(speed=1){
+    async reset(speed=2){
         speed *= -1;
         return new Promise((resolve) => {
             let i = this.rightClaw.position.x;

@@ -7,19 +7,13 @@ async function wait(){
 }
 
 async function clawFetch(){
-    if (!clawIsBusy){
-        clawIsBusy = true;
-        claw.open();
-        await(claw.moveY(2));
-        claw.close();
-        await(wait());
-        await(claw.moveY(-2));
-        await(claw.reset());
-        claw.open();
-        await(wait());
-        claw.close();
-        clawIsBusy = false;
-    }
+    claw.open();
+    await(claw.moveY(2));
+    await(claw.close());
+    await(claw.moveY(-2));
+    await(claw.reset());
+    await(claw.open());
+    claw.close();
 }
 
 function generatePrizes(mapWidth){
@@ -32,16 +26,22 @@ function generatePrizes(mapWidth){
 
 generatePrizes(w);
 
-document.onkeydown = function(e){
-    switch(e.keyCode){
-        case 37:
-            claw.moveX(-1);
-            break;
-        case 39:
-            claw.moveX(1);
-            break;
-        case 40:
-            clawFetch();
-            break;
+document.onkeydown = async function(e){
+    if (!clawIsBusy){
+        clawIsBusy = true;
+        switch(e.keyCode){
+            case 37:
+                await(claw.moveX(-1));
+                clawIsBusy = false;
+                break;
+            case 39:
+                await(claw.moveX(1));
+                clawIsBusy = false;
+                break;
+            case 40:
+                await(clawFetch());
+                clawIsBusy = false;
+                break;
+        }
     }
 };
