@@ -53,12 +53,39 @@ class Claw{
         Composite.add(engine.world, [this.rightClaw, this.leftClaw, this.constraintRight, this.constraintLeft, this.gap]); //add to the world
     }
     
-    close(){
-        this.gap.length = this.clawGap/2;   
+    close(speed = 1){
+        return new Promise((resolve) => {
+            let i = this.clawGap;
+            const step = () => {
+                if (i > this.clawGap/2){
+                    i -= speed;
+                    this.gap.length = i;
+                    requestAnimationFrame(step);
+                }
+                else{
+                    this.gap.length = thisclawGap/2;
+                    resolve();//end of animation
+                }
+            };
+            step();
+        });   
     }
     
-    open(){
-       this.gap.length = this.clawGap;
+    open(speed = 1){
+        return new Promise((resolve) => {
+            let i = this.clawGap/2;
+            const step = () => {
+                if (i < this.clawGap){
+                    i += speed;
+                    this.gap.length = i;
+                    requestAnimationFrame(step);
+                }
+                else{
+                    resolve();//end of animation
+                }
+            };
+            step();
+        });
     }
     
     moveX(direction, speed = 6, limitLeft = null, limitRight = null){
@@ -75,13 +102,12 @@ class Claw{
     }
     
     moveY(speed){
-        console.log(this.rightClaw.position.x);
         return new Promise((resolve) => {
             const step = () => {
                 if ((this.rightClaw.position.y < h-this.botLimit && speed > 0) ||
-                    (this.rightClaw.position.y > this.topLimit && speed < 0)){
-                    Body.translate(this.rightClaw, {x: 0, y: speed});
-                    Body.translate(this.leftClaw, {x: 0, y: speed});
+                    (this.rightClaw.position.y > this.topLimit && speed < 0) || 
+                   (this.leftClaw.position.y < h-this.botLimit && speed > 0) ||
+                    (this.leftClaw.position.y > this.topLimit && speed < 0)){
                     Body.translate(this.joint, {x: 0, y: speed});
                     requestAnimationFrame(step);
                 }

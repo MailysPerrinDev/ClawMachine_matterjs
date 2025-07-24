@@ -14,6 +14,11 @@ async function clawFetch(){
         claw.close();
         await(wait());
         await(claw.moveY(-2));
+        //moveX
+        await(wait());
+        claw.open();
+        await(wait());
+        claw.close();
         clawIsBusy = false;
     }
 }
