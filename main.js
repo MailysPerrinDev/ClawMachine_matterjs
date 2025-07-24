@@ -1,5 +1,5 @@
-let claw = new Claw(70, 40);
-let clawIsBusy = false;
+let prize = new Prize(72, 450, 30);
+let claw = new Claw(80, prize.height);
 
 async function wait(){
     return new Promise(resolve => setTimeout(resolve, 1000));
