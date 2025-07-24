@@ -1,5 +1,5 @@
-let prize = new Prize(300, 450, 30);
-let claw = new Claw(80, prize.height);
+let prize = new Prize(500, 450, 30);
+let claw = new Claw(150, prize.height);
 let clawIsBusy = false;
 
 async function wait(){
@@ -29,8 +29,6 @@ function generatePrizes(mapWidth){
 generatePrizes(w);
 
 document.onkeydown = function(e){
-
-    console.log(clawIsBusy);
     switch(e.keyCode){
         case 37:
             claw.moveX(-1);

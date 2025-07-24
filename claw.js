@@ -4,45 +4,74 @@ class Claw{
         this.clawGap = clawGap;
         this.topLimit = topLimit;
         this.botLimit = botLimit;
+           
+        //claws    
+        this.joint = Bodies.circle(mapLimit+40, 0, 20, {isStatic: true});
+        
+        this.topRightClaw = Bodies.rectangle(mapLimit, topLimit-40, 10, 60, {isStatic: true});
+        this.topLeftClaw = Bodies.rectangle(mapLimit+clawGap, topLimit-40, 10, 60, {isStatic: true});
+        
+        this.botRightClaw = Bodies.rectangle(mapLimit, topLimit, 10, 50, {isStatic: true});
+        this.botLeftClaw = Bodies.rectangle(mapLimit+clawGap, topLimit, 10, 50, {isStatic: true});
+        
+        Body.setAngle(this.topRightClaw,-2.6); //in radians
+        Body.setAngle(this.topLeftClaw, 2.6);
+        
+        Body.setAngle(this.botRightClaw, 2.4); //in radians
+        Body.setAngle(this.botLeftClaw, -2.4);
+        
+        this.rightClaw = Body.create({
+            parts: [this.topRightClaw, this.botRightClaw]
+        });
+        
+        this.leftClaw = Body.create({
+            parts: [this.topLeftClaw, this.botLeftClaw]
+        });
 
-        this.rightClaw = Bodies.rectangle(mapLimit, topLimit, 10, 50, {isStatic: true});
-        this.leftClaw = Bodies.rectangle(mapLimit+clawGap, topLimit, 10, 50, {isStatic: true});
         
-        Body.setAngle(this.rightClaw, 2.4); //in radians
-        Body.setAngle(this.leftClaw, -2.4);
+        this.constraintRight = Constraint.create({
+            bodyA: this.rightClaw,
+            bodyB: this.joint,
+            length: 100,
+            stiffness: 0.5
+        });
         
-        Composite.add(engine.world, [this.rightClaw, this.leftClaw]); //add to the world
+        this.constraintLeft = Constraint.create({
+            bodyA: this.leftClaw,
+            bodyB: this.joint,
+            length: 100,
+            stiffness: 0.7
+        });
+        
+        this.gap = Constraint.create({
+            bodyA: this.rightClaw,
+            bodyB: this.leftClaw,
+            length: this.clawGap/2,
+            stiffness: 1
+        });
+        
+        Composite.add(engine.world, [this.rightClaw, this.leftClaw, this.constraintRight, this.constraintLeft, this.gap]); //add to the world
     }
     
     close(){
-        Body.setPosition(this.rightClaw, {x: (this.rightClaw.position.x + 10), y: this.rightClaw.position.y});
-        Body.setPosition(this.leftClaw, {x: (this.leftClaw.position.x - 10), y: this.leftClaw.position.y});
-        
-        Body.setAngle(this.rightClaw, 2.4); //in radians
-        Body.setAngle(this.leftClaw, -2.4);
+        this.gap.length = this.clawGap/2;   
     }
     
     open(){
-        Body.setPosition(this.rightClaw, {x: (this.rightClaw.position.x - 10), y: this.rightClaw.position.y});
-        Body.setPosition(this.leftClaw, {x: (this.leftClaw.position.x + 10), y: this.leftClaw.position.y});
-
-        Body.setAngle(this.rightClaw, 2.6); //in radians
-        Body.setAngle(this.leftClaw, -2.6);
+       this.gap.length = this.clawGap;
     }
     
     moveX(direction, speed = 6, limitLeft = null, limitRight = null){
-        if (limitLeft === null) limitLeft = this.mapLimit + this.clawGap;
+        if (limitLeft === null) limitLeft = this.mapLimit;
         if (limitRight === null)  limitRight = w - limitLeft;
+
+        if (this.joint.position.x <= limitLeft || this.joint.position.x >= limitRight){
+            direction *= -2;
+        }
         
         Body.translate(this.rightClaw, {x: speed * direction, y: 0});
         Body.translate(this.leftClaw, {x: speed * direction, y: 0});
-
-        if (this.leftClaw.position.x <= limitLeft || this.rightClaw.position.x >= limitRight ){
-            direction *= -1;
-            Body.translate(this.rightClaw, {x: speed * direction, y: 0});
-            Body.translate(this.leftClaw, {x: speed * direction, y: 0});
-        }
-        console.log(this.rightClaw.position.x);
+        Body.translate(this.joint, {x: speed * direction, y: 0});
     }
     
     moveY(speed){
@@ -53,9 +82,10 @@ class Claw{
                     (this.rightClaw.position.y > this.topLimit && speed < 0)){
                     Body.translate(this.rightClaw, {x: 0, y: speed});
                     Body.translate(this.leftClaw, {x: 0, y: speed});
+                    Body.translate(this.joint, {x: 0, y: speed});
                     requestAnimationFrame(step);
                 }
-                else{            
+                else{
                     resolve();//end of animation
                 }
             };
