@@ -89,11 +89,13 @@ class Claw{
     }
     
     async moveX(direction, speed = 6, limitLeft = null, limitRight = null){
+        let nextPosition = this.joint.position.x + speed * direction;
+        
         if (limitLeft === null) limitLeft = this.mapLimit + 10;
         if (limitRight === null)  limitRight = w - this.mapLimit - 10;
         
-        if (this.joint.position.x + speed * direction < limitLeft ||
-            this.joint.position.x + speed * direction > limitRight){
+        if ( nextPosition < limitLeft ||
+            nextPosition > limitRight){
             return;
         }
         
@@ -104,10 +106,13 @@ class Claw{
     
     async moveY(speed=1){
         return new Promise((resolve) => {
-            const step = () => {
+            const step = () => { 
                 if  ((this.botRightClaw.bounds.max.y < h-this.botLimit && speed > 0) || //bouds.max.y is the y position of the 
                     (this.botLeftClaw.bounds.max.y < h-this.botLimit && speed > 0) || //lower part of the box
                     (this.joint.position.y > 0 && speed < 0)){
+                    
+                    Body.translate(this.rightClaw, {x: speed, y: 0});
+                    Body.translate(this.leftClaw, {x: speed, y: 0});
                     Body.translate(this.joint, {x: 0, y: speed});
                     requestAnimationFrame(step);
                 }
