@@ -47,7 +47,7 @@ class Claw{
             bodyA: this.rightClaw,
             bodyB: this.leftClaw,
             length: this.clawGap/2,
-            stiffness: 1
+            stiffness: 0.4
         });
         
         Composite.add(engine.world, [this.rightClaw, this.leftClaw, this.constraintRight, this.constraintLeft, this.gap]); //add to the world
@@ -104,10 +104,10 @@ class Claw{
     async moveY(speed=1){
         return new Promise((resolve) => {
             const step = () => {
-                if ((this.rightClaw.position.y < h-this.botLimit && speed > 0) ||
-                    (this.rightClaw.position.y > this.topLimit && speed < 0) || 
-                   (this.leftClaw.position.y < h-this.botLimit && speed > 0) ||
-                    (this.leftClaw.position.y > this.topLimit && speed < 0)){
+                if ((this.botRightClaw.bounds.max.y < h-this.botLimit && speed > 0) || //bouds.max.y is the y position of the 
+                   (this.botLeftClaw.bounds.max.y < h-this.botLimit && speed > 0) || //lower part of the box
+                    (this.joint.position.y > 0 && speed < 0) || 
+                    (this.joint.position.y > 0 && speed < 0)){
                     Body.translate(this.joint, {x: 0, y: speed});
                     requestAnimationFrame(step);
                 }
@@ -136,6 +136,4 @@ class Claw{
             step();
         });
     }
-
 }
-
