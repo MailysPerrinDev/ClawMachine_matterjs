@@ -1,5 +1,5 @@
 class Claw{
-    constructor(clawGap, mapLimit, topLimit = 80, botLimit = 47){
+    constructor(clawGap, mapLimit, topLimit = 80, botLimit = 50){
         this.mapLimit = mapLimit;
         this.clawGap = clawGap;
         this.topLimit = topLimit;
@@ -89,11 +89,12 @@ class Claw{
     }
     
     async moveX(direction, speed = 6, limitLeft = null, limitRight = null){
-        if (limitLeft === null) limitLeft = this.mapLimit;
-        if (limitRight === null)  limitRight = w - limitLeft;
-
-        if (this.joint.position.x <= limitLeft || this.joint.position.x >= limitRight){
-            direction *= -2;
+        if (limitLeft === null) limitLeft = this.mapLimit + 10;
+        if (limitRight === null)  limitRight = w - this.mapLimit - 10;
+        
+        if (this.joint.position.x + speed * direction < limitLeft ||
+            this.joint.position.x + speed * direction > limitRight){
+            return;
         }
         
         Body.translate(this.rightClaw, {x: speed * direction, y: 0});
@@ -104,9 +105,8 @@ class Claw{
     async moveY(speed=1){
         return new Promise((resolve) => {
             const step = () => {
-                if ((this.botRightClaw.bounds.max.y < h-this.botLimit && speed > 0) || //bouds.max.y is the y position of the 
-                   (this.botLeftClaw.bounds.max.y < h-this.botLimit && speed > 0) || //lower part of the box
-                    (this.joint.position.y > 0 && speed < 0) || 
+                if  ((this.botRightClaw.bounds.max.y < h-this.botLimit && speed > 0) || //bouds.max.y is the y position of the 
+                    (this.botLeftClaw.bounds.max.y < h-this.botLimit && speed > 0) || //lower part of the box
                     (this.joint.position.y > 0 && speed < 0)){
                     Body.translate(this.joint, {x: 0, y: speed});
                     requestAnimationFrame(step);

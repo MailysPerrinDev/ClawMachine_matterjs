@@ -25,7 +25,6 @@ function generatePrizes(mapWidth){
 }
 
 generatePrizes(w);
-
 document.onkeydown = async function(e){
     if (!clawIsBusy){
         clawIsBusy = true;
