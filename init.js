@@ -1,5 +1,5 @@
 //module aliases
-const {Engine, Render, Runner, Bodies, Composite, Body, Bounds, Constraint} = Matter;
+const {Engine, Render, Runner, Bodies, Composite, Body, Bounds, Constraint, Events} = Matter;
 
 let engine, render, runner;
 let ground, wallRight, wallLeft;

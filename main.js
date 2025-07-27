@@ -8,9 +8,9 @@ async function wait(){
 
 async function clawFetch(){
     claw.open();
-    await(claw.moveY(2));
+    await(claw.moveY(3));
     await(claw.close());
-    await(claw.moveY(-2));
+    await(claw.moveY(-3));
     await(claw.reset());
     await(claw.open());
     claw.close();
