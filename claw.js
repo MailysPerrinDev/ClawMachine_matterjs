@@ -42,7 +42,7 @@ class Claw{
             bodyB: this.joint,
             pointB: {x: 0, y: this.joint.bounds.min.y},
             length: 100,
-            stiffness: 0.7,
+            stiffness: 0.2,
         });
         
         this.constraintLeft = Constraint.create({
@@ -51,7 +51,7 @@ class Claw{
             bodyB: this.joint,
             pointB: {x: 0, y: this.joint.bounds.min.y},
             length: 100,
-            stiffness: 0.7,
+            stiffness: 0.2,
         });
         
         this.gap = Constraint.create({
@@ -110,8 +110,8 @@ class Claw{
     async moveX(direction, speed = 6, limitLeft = null, limitRight = null){
         let nextPosition = this.joint.position.x + speed * direction;
         
-        if (limitLeft === null) limitLeft = this.mapLimit + 10;
-        if (limitRight === null)  limitRight = w - this.mapLimit - 10;
+        if (limitLeft === null) limitLeft = this.mapLimit;
+        if (limitRight === null)  limitRight = w - this.mapLimit;
         
         if ( nextPosition < limitLeft ||
             nextPosition > limitRight){
@@ -129,8 +129,6 @@ class Claw{
                 if  ((this.constraintLeft.length < h && speed > 0) ||
                     (this.constraintLeft.length > 100 && speed < 0)){
                     
-                    Body.translate(this.rightClaw, {x: 0, y: speed});
-                    Body.translate(this.leftClaw, {x: 0, y: speed});
                     this.constraintLeft.length += speed;
                     this.constraintRight.length += speed;
                     requestAnimationFrame(step);
