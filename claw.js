@@ -62,7 +62,7 @@ class Claw{
         this.gap = Constraint.create({
             bodyA: this.rightClaw,
             bodyB: this.leftClaw,
-            length: this.clawGap/2+1,
+            length: this.clawGap,
             stiffness: 1,
         });
         
@@ -84,7 +84,7 @@ class Claw{
                     requestAnimationFrame(step);
                 } 
                 else {
-                    this.gap.length = this.clawGap / 2;
+                    this.gap.length = this.clawGap;
                     resolve(); //end of animation
                 }
             };
@@ -102,6 +102,7 @@ class Claw{
                 if (rightAngle < targetAngle - speed) {
                     Body.setAngle(this.rightClaw, rightAngle + speed);
                     Body.setAngle(this.leftClaw, - (rightAngle + speed));
+                    this.gap.length += 1;
                     requestAnimationFrame(step);
                 } 
                 else {

@@ -1,13 +1,14 @@
 let prize = new Prize(500, 450, 30);
-let claw = new Claw(150, prize.height);
+let claw = new Claw(75, prize.height);
 let clawIsBusy = false;
 
 async function wait(){
-    return new Promise(resolve => setTimeout(resolve, 1000));
+    return new Promise(resolve => setTimeout(resolve, 500));
 }
 
 async function clawFetch(){
-    claw.open();
+    await(claw.open());
+    await(wait());
     await(claw.moveY(3));
     await(claw.close());
     await(claw.moveY(-3));
