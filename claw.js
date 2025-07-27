@@ -102,7 +102,6 @@ class Claw{
                 if (rightAngle < targetAngle - speed) {
                     Body.setAngle(this.rightClaw, rightAngle + speed);
                     Body.setAngle(this.leftClaw, - (rightAngle + speed));
-                    this.gap.length += 1;
                     requestAnimationFrame(step);
                 } 
                 else {
