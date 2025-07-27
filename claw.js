@@ -4,6 +4,7 @@ class Claw{
         this.clawGap = clawGap;
         this.topLimit = topLimit;
         this.botLimit = botLimit;
+        const clawGroup = -1234; //No claw-llision (collision)
            
         //arm   
         this.arm = Bodies.circle(mapLimit+40, 0, 20, {isStatic: true});
@@ -11,6 +12,7 @@ class Claw{
         
         //claws
         this.topRightClaw = Bodies.rectangle(mapLimit, topLimit-40, 10, 60, {isStatic: true});
+        console.log(this.topRightClaw.collisionFilter);
         this.topLeftClaw = Bodies.rectangle(mapLimit+clawGap, topLimit-40, 10, 60, {isStatic: true});
         
         Body.setAngle(this.topRightClaw, -2.6); //in radians
@@ -22,19 +24,14 @@ class Claw{
         Body.setAngle(this.botRightClaw, 2.4); //in radians
         Body.setAngle(this.botLeftClaw, -2.4);
         
-/*        //roof
-        let roofWidth = (this.topLeftClaw.bounds.min.x - this.topRightClaw.bounds.min.x) / 2;
-        console.log(roofWidth);
-        this.roof = Bodies.rectangle(100, this.topRightClaw.bounds.min.y, 10, roofWidth, {isStatic: true});
-        Body.setAngle(this.roof, 1.570796);
-*/
-        
         this.rightClaw = Body.create({
-            parts: [this.topRightClaw, this.botRightClaw]
+            parts: [this.topRightClaw, this.botRightClaw],
+            collisionFilter: {group: clawGroup}
         });
         
         this.leftClaw = Body.create({
-            parts: [this.topLeftClaw, this.botLeftClaw]
+            parts: [this.topLeftClaw, this.botLeftClaw],
+            collisionFilter: {group: clawGroup}
         });
         
         this.constraintRight = Constraint.create({
@@ -43,7 +40,7 @@ class Claw{
             bodyB: this.joint,
             pointB: {x: 0, y: this.joint.bounds.min.y},
             length: 83,
-            stiffness: 0.2,
+            stiffness: 0.2
         });
         
         this.constraintLeft = Constraint.create({
@@ -134,7 +131,6 @@ class Claw{
             const step = () => { 
                 if  ((this.constraintArm.length < h-90 && speed > 0) ||
                     (this.constraintArm.length > 10 && speed < 0)){
-                    
                     this.constraintArm.length += speed;
                     requestAnimationFrame(step);
                 }
