@@ -6,7 +6,8 @@ class Claw{
         this.botLimit = botLimit;
            
         //arm   
-        this.joint = Bodies.circle(mapLimit+40, 0, 20, {isStatic: true});
+        this.arm = Bodies.circle(mapLimit+40, 0, 20, {isStatic: true});
+        this.joint = Bodies.circle(mapLimit+40, 40, 20);
         
         //claws
         this.topRightClaw = Bodies.rectangle(mapLimit, topLimit-40, 10, 60, {isStatic: true});
@@ -41,7 +42,7 @@ class Claw{
             //pointA: {x: 0, y: -this.rightClaw.bounds.max.y / 2},
             bodyB: this.joint,
             pointB: {x: 0, y: this.joint.bounds.min.y},
-            length: 100,
+            length: 83,
             stiffness: 0.2,
         });
         
@@ -50,8 +51,15 @@ class Claw{
             //pointA: {x: 0, y: -this.leftClaw.bounds.max.y / 2},
             bodyB: this.joint,
             pointB: {x: 0, y: this.joint.bounds.min.y},
-            length: 100,
-            stiffness: 0.2,
+            length: 83,
+            stiffness: 0.2
+        });
+        
+        this.constraintArm = Constraint.create({
+            bodyA: this.arm,
+            bodyB: this.joint,
+            length: 10,
+            stiffness: 0.2
         });
         
         this.gap = Constraint.create({
@@ -63,7 +71,7 @@ class Claw{
         
         Composite.add(engine.world, [this.rightClaw, this.leftClaw, 
                                     this.constraintRight, this.constraintLeft, 
-                                    this.gap]); //add to the world
+                                    this.gap, this.constraintArm]); //add to the world
     }
     
     async close(speed = 0.03) {
@@ -118,19 +126,16 @@ class Claw{
             return;
         }
         
-        Body.translate(this.rightClaw, {x: speed * direction, y: 0});
-        Body.translate(this.leftClaw, {x: speed * direction, y: 0});
-        Body.translate(this.joint, {x: speed * direction, y: 0});
+        Body.translate(this.arm, {x: speed * direction, y: 0});
     }
     
     async moveY(speed = 3){
         return new Promise((resolve) => {
             const step = () => { 
-                if  ((this.constraintLeft.length < h && speed > 0) ||
-                    (this.constraintLeft.length > 100 && speed < 0)){
+                if  ((this.constraintArm.length < h-90 && speed > 0) ||
+                    (this.constraintArm.length > 10 && speed < 0)){
                     
-                    this.constraintLeft.length += speed;
-                    this.constraintRight.length += speed;
+                    this.constraintArm.length += speed;
                     requestAnimationFrame(step);
                 }
                 else{
@@ -148,7 +153,7 @@ class Claw{
            const step = () => {
                if (i > this.mapLimit){
                    i += speed;
-                    Body.translate(this.joint, {x: speed, y: 0});
+                    Body.translate(this.arm, {x: speed, y: 0});
                     requestAnimationFrame(step);
                }
                else{
