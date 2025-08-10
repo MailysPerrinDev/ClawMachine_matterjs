@@ -1,4 +1,5 @@
-let prize = new Prize(500, 450, 30);
+let prize = new Prize(w/2, 450, 30);
+let prizes = [];
 let claw = new Claw(75, prize.height);
 let clawIsBusy = false;
 
@@ -19,9 +20,11 @@ async function clawFetch(){
 
 function generatePrizes(mapWidth){
     let n = mapWidth/prize.width;
+    let newPrize;
     
     for (let i=0; i<n; i++){
-        new Prize(w/2, 450, 30);
+        newPrize = new Prize(w/2, 450, 30);
+        prizes.push(newPrize);
     }
 }
 
@@ -29,10 +32,13 @@ generatePrizes(w);
 
 Events.on(engine, 'collisionStart', function(event) {
     let pairs = event.pairs;
+    let pair;
+    let bodyA, bodyB;
+    
     for (let i = 0; i != pairs.length; ++i) {
-        let pair = pairs[i];
-        let bodyA = pair.bodyA;
-        let bodyB = pair.bodyB;
+        pair = pairs[i];
+        bodyA = pair.bodyA;
+        bodyB = pair.bodyB;
         if ((bodyA.label === 'prizeBox' && bodyB.label === 'prize') ||
             (bodyA.label === 'prize' && bodyB.label === 'prizeBox')) {
             console.log("PRIZE WON!");
@@ -55,6 +61,8 @@ if (!clawIsBusy){
             case 40:
                 await(clawFetch());
                 clawIsBusy = false;
+                break;
+            default:
                 break;
         }
     }
