@@ -26,8 +26,22 @@ function generatePrizes(mapWidth){
 }
 
 generatePrizes(w);
+
+Events.on(engine, 'collisionStart', function(event) {
+    let pairs = event.pairs;
+    for (let i = 0; i != pairs.length; ++i) {
+        let pair = pairs[i];
+        let bodyA = pair.bodyA;
+        let bodyB = pair.bodyB;
+        if ((bodyA.label === 'prizeBox' && bodyB.label === 'prize') ||
+            (bodyA.label === 'prize' && bodyB.label === 'prizeBox')) {
+            console.log("PRIZE WON!");
+        } 
+    }
+});
+          
 document.onkeydown = async function(e){
-    if (!clawIsBusy){
+if (!clawIsBusy){
         clawIsBusy = true;
         switch(e.keyCode){
             case 37:

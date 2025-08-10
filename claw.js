@@ -12,7 +12,6 @@ class Claw{
         
         //claws
         this.topRightClaw = Bodies.rectangle(mapLimit, topLimit-40, 10, 60, {isStatic: true});
-        console.log(this.topRightClaw.collisionFilter);
         this.topLeftClaw = Bodies.rectangle(mapLimit+clawGap, topLimit-40, 10, 60, {isStatic: true});
         
         Body.setAngle(this.topRightClaw, -2.6); //in radians
@@ -63,7 +62,7 @@ class Claw{
             bodyA: this.rightClaw,
             bodyB: this.leftClaw,
             length: this.clawGap,
-            stiffness: 1,
+            stiffness: 1
         });
         
         Composite.add(engine.world, [this.rightClaw, this.leftClaw, 
