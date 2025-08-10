@@ -2,6 +2,7 @@ let prize = new Prize(w/2, 450, 30);
 let prizes = [];
 let claw = new Claw(75, prize.height);
 let clawIsBusy = false;
+let gameIsPaused = false;
 
 async function wait(){
     return new Promise(resolve => setTimeout(resolve, 500));
@@ -28,9 +29,19 @@ function generatePrizes(mapWidth){
     }
 }
 
+function pause(){
+    Runner.stop(runner);
+    gameIsPaused = true;
+}
+
+function unpause(){
+    Runner.start(runner);
+    gameIsPaused = false;
+}
+
 generatePrizes(w);
 
-Events.on(engine, 'collisionStart', function(event) {
+Events.on(engine, 'collisionEnd', function(event) {
     let pairs = event.pairs;
     let pair;
     let bodyA, bodyB;
@@ -47,7 +58,7 @@ Events.on(engine, 'collisionStart', function(event) {
 });
           
 document.onkeydown = async function(e){
-if (!clawIsBusy){
+if (!clawIsBusy && !gameIsPaused){
         clawIsBusy = true;
         switch(e.keyCode){
             case 37:
@@ -63,6 +74,7 @@ if (!clawIsBusy){
                 clawIsBusy = false;
                 break;
             default:
+                clawIsBusy = false;
                 break;
         }
     }
