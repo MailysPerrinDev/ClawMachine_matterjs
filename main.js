@@ -35,7 +35,7 @@ function pause(){
 }
 
 function unpause(){
-    Runner.start(runner);
+    Runner.run(runner, engine);
     gameIsPaused = false;
 }
 
@@ -52,13 +52,14 @@ Events.on(engine, 'collisionEnd', function(event) {
         bodyB = pair.bodyB;
         if ((bodyA.label === 'prizeBox' && bodyB.label === 'prize') ||
             (bodyA.label === 'prize' && bodyB.label === 'prizeBox')) {
-            console.log("PRIZE WON!");
+            console.log("PRIZE WON! (press space to continue)");
+            pause();
         } 
     }
 });
           
 document.onkeydown = async function(e){
-if (!clawIsBusy && !gameIsPaused){
+    if (!clawIsBusy && !gameIsPaused){
         clawIsBusy = true;
         switch(e.keyCode){
             case 37:
@@ -77,5 +78,10 @@ if (!clawIsBusy && !gameIsPaused){
                 clawIsBusy = false;
                 break;
         }
+    }
+    
+    if (gameIsPaused){
+        if (e.keyCode == 32)
+            unpause();
     }
 };
