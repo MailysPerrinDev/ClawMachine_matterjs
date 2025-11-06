@@ -5,9 +5,11 @@ class Claw{
         this.topLimit = topLimit;
         this.botLimit = botLimit;
         const clawGroup = -1234; //No claw-llision (collision)
+        var originalAngle;
            
         //arm   
         this.arm = Bodies.circle(mapLimit+40, 0, 20, {isStatic: true});
+        this.originalAngle = this.arm.angle;
         this.joint = Bodies.circle(mapLimit+40, 40, 20);
         
         //claws
@@ -55,7 +57,8 @@ class Claw{
             bodyA: this.arm,
             bodyB: this.joint,
             length: 10,
-            stiffness: 0.2
+            stiffness: 0.2,
+            damping: 0.1
         });
         
         this.gap = Constraint.create({
@@ -144,7 +147,7 @@ class Claw{
     async reset(speed = 3){
         speed *= -1;
         return new Promise((resolve) => {
-            let i = this.rightClaw.position.x;
+           let i = this.rightClaw.position.x;
            const step = () => {
                if (i > this.mapLimit){
                    i += speed;
@@ -157,5 +160,11 @@ class Claw{
            };
             step();
         });
+    }
+    
+    async resetArm(){
+        var angleDiff = this.originalAngle - this.arm.angle;
+        var torque =  angleDiff * 0.05;
+        this.arm.setAngularVelocity(this.arm, this.arm.angularVelocity + torque);
     }
 }

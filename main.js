@@ -57,17 +57,19 @@ Events.on(engine, 'collisionEnd', function(event) {
         } 
     }
 });
-          
+
 document.onkeydown = async function(e){
     if (!clawIsBusy && !gameIsPaused){
         clawIsBusy = true;
         switch(e.keyCode){
             case 37:
                 await(claw.moveX(-1));
+                Claw.resetArm();
                 clawIsBusy = false;
                 break;
             case 39:
                 await(claw.moveX(1));
+                Claw.resetArm();
                 clawIsBusy = false;
                 break;
             case 40:
