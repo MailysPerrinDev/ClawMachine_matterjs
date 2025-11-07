@@ -144,6 +144,19 @@ class Claw{
         });
     }
     
+    async fetch(){
+        this.resetArm();
+        await(this.open());
+        await(wait());
+        Body.setStatic(this.joint, false);
+        await(this.moveY(3));
+        await(this.close());
+        await(this.moveY(-3));
+        await(this.reset());
+        await(this.open());
+        this.close();
+    }
+    
     async reset(speed = 3){
         speed *= -1;
         return new Promise((resolve) => {
@@ -163,8 +176,8 @@ class Claw{
     }
     
     async resetArm(){
-        var angleDiff = this.originalAngle - this.arm.angle;
-        var torque =  angleDiff * 0.05;
-        this.arm.setAngularVelocity(this.arm, this.arm.angularVelocity + torque);
+        Body.setStatic(this.joint, true);
+        Body.setPosition(this.joint, {x : this.arm.position.x,
+                                    y : this.joint.position.y});
     }
 }
