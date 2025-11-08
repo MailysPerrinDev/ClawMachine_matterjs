@@ -120,10 +120,12 @@ class Claw{
         if (limitLeft === null) limitLeft = this.mapLimit;
         if (limitRight === null)  limitRight = w - this.mapLimit;
         
-        if ( nextPosition < limitLeft ||
-            nextPosition > limitRight){
+        if ( direction < 0 && 
+            (this.leftClaw.position.x <= limitLeft || this.joint.position.x <= limitLeft + 10))
             return;
-        }
+        else if (direction > 0 && 
+                 (this.rightClaw.position.x >= limitRight || this.joint.position.x >= limitRight + 10))
+            return;
         
         Body.translate(this.arm, {x: speed * direction, y: 0});
     }

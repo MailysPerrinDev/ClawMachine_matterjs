@@ -4,8 +4,14 @@ class Prize{
         this.prize = Bodies.circle(prizeX, prizeY, prizeRad, {label: 'prize'});
         Body.setAngularVelocity(this.prize, 0.005);
         // Body.applyForce(this.prize, {x: this.prize.position.x, y: h-10}, {x:0 , y:0.1});
-       // Body.setMass(this.prize, 40);
-        
+        // Body.setMass(this.prize, 40);
+       /*this.prize.render.sprite = {
+          texture: "/images/prizes/kiwi.jpg",
+          xScale: this.rad * 2 / 160, // adapte à la largeur réelle de l’image
+          yScale: this.rad * 2 / 160  // adapte à la hauteur réelle de l’image
+        };*/
+
+
         Composite.add(engine.world, this.prize);
     }
     get height(){

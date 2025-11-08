@@ -51,15 +51,19 @@ document.onkeydown = async function(e){
     if (!clawIsBusy && !gameIsPaused){
         clawIsBusy = true;
         switch(e.keyCode){
-            case 37:
+            case 37: //left arrow
                 await(claw.moveX(-1));
                 clawIsBusy = false;
                 break;
-            case 39:
+            case 39: //right arrow
                 await(claw.moveX(1));
                 clawIsBusy = false;
                 break;
-            case 40:
+            case 40: //down arrow
+                await(claw.fetch());
+                clawIsBusy = false;
+                break;
+            case 32: //spacebar
                 await(claw.fetch());
                 clawIsBusy = false;
                 break;
@@ -70,7 +74,7 @@ document.onkeydown = async function(e){
     }
     
     if (gameIsPaused){
-        if (e.keyCode == 32)
+        if (e.keyCode == 32) //spacebar
             unpause();
     }
 };

@@ -16,7 +16,8 @@ render = Render.create({
     }
 });
 runner = Runner.create();
-
+render.options.enabled = true;
+render.options.wireframes = false;
 //borders
 ground = Bodies.rectangle((w/2)+100, h, w-200, 10, {isStatic: true});
 
